@@ -48,10 +48,10 @@ plate_counts_df_11_5 %>%
   geom_point((aes(color = Tank))) +
   geom_line((aes(color = Tank))) +
   ggtitle("Total CFU per Tank Since 2/7/2020") +
-  geom_point(aes(group = seq_along(Date_Read), color = Tank)) +
-  transition_reveal(Date_Read)
+  geom_point(aes(group = seq_along(Date_Read), color = Tank))
 
 ```
+
 # A System -> A High
 ```{r, echo=FALSE}
 library(plotly)
