@@ -1,0 +1,239 @@
+---
+title: "Plate_Counts_2020"
+output:
+  html_document:
+    df_print: paged
+  prettydoc::html_pretty:
+    theme: cayman
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+```
+
+```{r, echo=FALSE}
+library(tidyverse)
+library(dplyr)
+library(lubridate)
+```
+
+## Data Formatting
+```{r, fig.width = 8, fig.height = 6, echo=FALSE}
+plate_counts_df_11_19 <- read_csv("2017_plate_counts_fixed_11_19.csv",
+    col_types = cols(Dilution_X = col_number(), 
+        Half_Plate_Count_TSA_W_SB = col_number(), 
+        Full_Plate = col_number(), Hours = col_number(), 
+        Count_X_Dil = col_number(), Total_CFU = col_number()),
+    locale = locale())
+view(plate_counts_df_11_19)
+
+plate_counts_df_11_19 %>% 
+  group_by(Date_Read, Tank, Total_CFU) %>% 
+  filter(Date_Read >= as.Date("2020-01-30")) %>% 
+  ggplot(aes(x = Date_Read, y = Total_CFU)) +
+  geom_point((aes(color = Tank))) +
+    geom_line((aes(color = Tank))) +
+    ggtitle("2020 Plate Counts Per Tank")
+```
+
+# Data for all tanks
+```{r, fig.width = 9, fig.height = 6, echo=FALSE}
+plate_counts_df_11_19 %>% 
+  group_by(Date_Read, Tank, Total_CFU) %>% 
+  filter(Date_Read >= as.Date("2020-01-30")) %>%
+  filter(Tank %in% c("A High", "B High", "B6", "C High", "D High", "E High", "HT", "P1 High", "P2 High", "P6 High", "P7 High", "P9 High", "P9", "P10", "P10 High")) %>% 
+  ggplot(aes(x = Date_Read, y = Total_CFU)) +
+  geom_point((aes(color = Tank))) +
+    geom_line((aes(color = Tank))) +
+    ggtitle("2020_Plate_Counts_Per_Tank")
+```
+
+# Data separated by tank since January 7th, 2020
+```{r, fig.width = 8.5, fig.height = 11, echo=FALSE}
+plate_counts_df_11_19 %>% 
+  group_by(Date_Read, Tank, Total_CFU) %>% 
+  filter(Date_Read >= as.Date("2020-01-30")) %>%
+  filter(Tank %in% c("A High", "B High", "B6", "C High", "D High", "E High", "HT", "P1 High", "P2 High", "P6 High", "P7 High", "P9 High", "P9", "P10", "P10 High")) %>%
+  ggplot(aes(x = Date_Read, y = Total_CFU)) +
+  geom_point((aes(color = Tank))) +
+    geom_line((aes(color = Tank, group = Tank))) +
+    ggtitle("2020_Plate_Counts_Per_Tank") +
+  facet_wrap(~Tank, ncol=2) +
+  labs(x = "Date", y = "Total_Colony_Forming_Units") +
+  theme_light() +
+  theme(text = element_text (size = 12))
+
+plate_counts_df_11_19 %>% 
+  group_by(Date_Read, Tank, Total_CFU) %>% 
+  filter(Date_Read >= as.Date("2020-01-30")) %>%
+  filter(Tank %in% c("A High", "B High", "B6", "C High", "D High", "E High", "HT", "P1 High", "P2 High", "P6 High", "P7 High", "P9 High", "P9", "P10", "P10 High", "P10 high")) %>%
+  ggplot(aes(x = Date_Read, y = Total_CFU)) +
+  geom_point((aes(color = Tank))) +
+    geom_line((aes(color = Tank, group = Tank))) +
+    ggtitle("2020_Plate_Counts_Per_Tank") +
+  facet_wrap(~Tank, ncol=2, scales="free_y") +
+  labs(x = "Date", y = "Total_Colony_Forming_Units") +
+  theme_light() +
+  theme(text = element_text (size = 12))
+```
+
+# Separate by tank after August 12th, 2020, adjusting to no dilutions
+```{r, fig.width = 10, fig.height = 8, echo=FALSE}
+plate_counts_df_11_19 %>% 
+  group_by(Date_Read, Tank, Total_CFU) %>% 
+  filter(Date_Read >= as.Date("2020-08-12")) %>%
+  ggplot(aes(x = Date_Read, y = Total_CFU)) +
+  geom_point((aes(color = Tank))) +
+    geom_line((aes(color = Tank, group = Tank))) +
+    ggtitle("2020_Plate_Counts_Per_Tank") +
+  facet_wrap(~Tank, ncol=2) +
+  labs(x = "Date", y = "Total_Colony_Forming_Units") +
+  theme_light() +
+  theme(text = element_text (size = 12))
+```
+
+## A system August to November 2020 using no dilution method
+```{r, fig.width = 4, fig.height = 3, echo=FALSE}
+plate_counts_df_11_19 %>% 
+  group_by(Date_Read, Tank, Total_CFU) %>% 
+  filter(Date_Read >= as.Date("2020-08-12")) %>%
+  filter(Tank %in% c("A High")) %>%
+  ggplot(aes(x = Date_Read, y = Total_CFU)) +
+  geom_point((aes(color = Tank))) +
+    geom_line((aes(color = Tank, group = Tank))) +
+    ggtitle("2020_Plate_Counts_Per_Tank") +
+  labs(x = "Date", y = "Total_Colony_Forming_Units") +
+  theme_light() +
+  theme(text = element_text (size = 12))
+```
+
+## B system August to November 2020 using no dilution method
+```{r, fig.width = 4, fig.height = 3, echo=FALSE}
+plate_counts_df_11_19 %>% 
+  group_by(Date_Read, Tank, Total_CFU) %>% 
+  filter(Date_Read >= as.Date("2020-08-12")) %>%
+  filter(Tank %in% c("B High")) %>%
+  ggplot(aes(x = Date_Read, y = Total_CFU)) +
+  geom_point((aes(color = Tank))) +
+    geom_line((aes(color = Tank, group = Tank))) +
+    ggtitle("2020_Plate_Counts_Per_Tank") +
+  labs(x = "Date", y = "Total_Colony_Forming_Units") +
+  theme_light() +
+  theme(text = element_text (size = 12))
+```
+
+## C system August to November 2020 using no dilution method
+```{r, fig.width = 4, fig.height = 3, echo=FALSE}
+plate_counts_df_11_19 %>% 
+  group_by(Date_Read, Tank, Total_CFU) %>% 
+  filter(Date_Read >= as.Date("2020-08-12")) %>%
+  filter(Tank %in% c("C High")) %>%
+  ggplot(aes(x = Date_Read, y = Total_CFU)) +
+  geom_point((aes(color = Tank))) +
+    geom_line((aes(color = Tank, group = Tank))) +
+    ggtitle("2020_Plate_Counts_Per_Tank") +
+  labs(x = "Date", y = "Total_Colony_Forming_Units") +
+  theme_light() +
+  theme(text = element_text (size = 12))
+```
+
+## D system August to November 2020 using no dilution method
+```{r, fig.width = 4, fig.height = 3, echo=FALSE}
+plate_counts_df_11_19 %>% 
+  group_by(Date_Read, Tank, Total_CFU) %>% 
+  filter(Date_Read >= as.Date("2020-08-12")) %>%
+  filter(Tank %in% c("D High")) %>%
+  ggplot(aes(x = Date_Read, y = Total_CFU)) +
+  geom_point((aes(color = Tank))) +
+    geom_line((aes(color = Tank, group = Tank))) +
+    ggtitle("2020_Plate_Counts_Per_Tank") +
+  labs(x = "Date", y = "Total_Colony_Forming_Units") +
+  theme_light() +
+  theme(text = element_text (size = 12))
+```
+
+## E system August to November 2020 using no dilution method
+```{r, fig.width = 4, fig.height = 3, echo=FALSE}
+plate_counts_df_11_19 %>% 
+  group_by(Date_Read, Tank, Total_CFU) %>% 
+  filter(Date_Read >= as.Date("2020-08-12")) %>%
+  filter(Tank %in% c("E High")) %>%
+  ggplot(aes(x = Date_Read, y = Total_CFU)) +
+  geom_point((aes(color = Tank))) +
+    geom_line((aes(color = Tank, group = Tank))) +
+    ggtitle("2020_Plate_Counts_Per_Tank") +
+  labs(x = "Date", y = "Total_Colony_Forming_Units") +
+  theme_light() +
+  theme(text = element_text (size = 12))
+```
+
+## F system August to November 2020 using no dilution method
+```{r, fig.width = 4, fig.height = 3, echo=FALSE}
+plate_counts_df_11_19 %>% 
+  group_by(Date_Read, Tank, Total_CFU) %>% 
+  filter(Date_Read >= as.Date("2020-08-12")) %>%
+  filter(Tank %in% c("F High")) %>%
+  ggplot(aes(x = Date_Read, y = Total_CFU)) +
+  geom_point((aes(color = Tank))) +
+    geom_line((aes(color = Tank, group = Tank))) +
+    ggtitle("2020_Plate_Counts_Per_Tank") +
+  labs(x = "Date", y = "Total_Colony_Forming_Units") +
+  theme_light() +
+  theme(text = element_text (size = 12))
+```
+
+## P system August to November 2020 using no dilution method
+```{r, fig.width = 7, fig.height = 5, echo=FALSE}
+plate_counts_df_11_19 %>% 
+  group_by(Date_Read, Tank, Total_CFU) %>% 
+  filter(Date_Read >= as.Date("2020-08-12")) %>%
+  filter(Tank %in% c("P1 High", "P2 High", "P6 High", "P7 High", "P9 High", "P10 High")) %>%
+  ggplot(aes(x = Date_Read, y = Total_CFU)) +
+  geom_point((aes(color = Tank))) +
+    geom_line((aes(color = Tank, group = Tank))) +
+    ggtitle("2020_Plate_Counts_Per_Tank") +
+  labs(x = "Date", y = "Total_Colony_Forming_Units") +
+  theme_light() +
+  theme(text = element_text (size = 12))
+
+plate_counts_df_11_19 %>% 
+  group_by(Date_Read, Tank, Total_CFU) %>% 
+  filter(Date_Read >= as.Date("2020-08-12")) %>%
+  filter(Tank %in% c("P1 High", "P2 High", "P6 High", "P7 High", "P9 High", "P10 High")) %>%
+  ggplot(aes(x = Date_Read, y = Total_CFU)) +
+  geom_point((aes(color = Tank))) +
+    geom_line((aes(color = Tank, group = Tank))) +
+    ggtitle("2020_Plate_Counts_Per_Tank") +
+  labs(x = "Date", y = "Total_Colony_Forming_Units") +
+  theme_light() +
+  theme(text = element_text (size = 12)) +
+  facet_wrap(~Tank, ncol=2, scales="free_y")
+```
+
+## HT August to November 2020 using no dilution method
+```{r, fig.width = 6, fig.height = 4, echo=FALSE}
+plate_counts_df_11_19 %>% 
+  group_by(Date_Read, Tank, Total_CFU) %>% 
+  filter(Date_Read >= as.Date("2020-08-12")) %>%
+  filter(Tank %in% c("HT", "HTGN Post-UV")) %>%
+  ggplot(aes(x = Date_Read, y = Total_CFU)) +
+  geom_point((aes(color = Tank))) +
+    geom_line((aes(color = Tank, group = Tank))) +
+    ggtitle("2020_Plate_Counts_Per_Tank") +
+  labs(x = "Date", y = "Total_Colony_Forming_Units") +
+  theme_light() +
+  theme(text = element_text (size = 12))
+
+plate_counts_df_11_19 %>% 
+  group_by(Date_Read, Tank, Total_CFU) %>% 
+  filter(Date_Read >= as.Date("2020-08-12")) %>%
+  filter(Tank %in% c("HT", "HTGN Post-UV")) %>%
+  ggplot(aes(x = Date_Read, y = Total_CFU)) +
+  geom_point((aes(color = Tank))) +
+    geom_line((aes(color = Tank, group = Tank))) +
+    ggtitle("2020_Plate_Counts_Per_Tank") +
+  labs(x = "Date", y = "Total_Colony_Forming_Units") +
+  theme_light() +
+  theme(text = element_text (size = 12)) +
+  facet_wrap(~Tank, ncol=2)
+```
